@@ -1,0 +1,25 @@
+# LLM Model files
+LLM/
+*.gguf
+*.bin
+*.model
+
+# .NET Core
+bin/
+obj/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+.vs/
+.vscode/
+*.swp
+*.*~
+project.lock.json
+.DS_Store
+*.pyc
+nupkg/
+
+# IDE
+.idea/
+*.sln.iml 
