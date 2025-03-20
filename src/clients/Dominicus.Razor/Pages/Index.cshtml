@@ -1,0 +1,109 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Dominicus";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="text-center mb-5 animate-fade-in">
+                <h1 class="display-4 dominican-header mb-4">Dominicus</h1>
+                <p class="lead text-gradient">Ask me anything and I'll respond in Dominican Spanish!</p>
+            </div>
+
+            <div class="card shadow-lg mb-4 animate-slide-up">
+                <div class="card-body position-relative p-4">
+                    <form method="post" id="questionForm" class="needs-validation" novalidate>
+                        <div class="form-group mb-4">
+                            <label for="Question" class="form-label visually-hidden">Your Question</label>
+                            <textarea asp-for="Question" 
+                                    class="form-control form-control-lg" 
+                                    rows="3" 
+                                    placeholder="Type your question here..."
+                                    required></textarea>
+                            <span asp-validation-for="Question" class="text-danger"></span>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg w-100 position-relative">
+                            <span class="button-text">
+                                <i class="fas fa-paper-plane me-2"></i>Ask Dominicus
+                            </span>
+                            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                        </button>
+                    </form>
+                    <div class="plantain-decoration"></div>
+                </div>
+            </div>
+
+            @if (Model.CurrentConversation != null)
+            {
+                <div class="card shadow-lg mb-4 conversation-card animate-fade-in">
+                    <div class="card-header p-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-question-circle text-primary me-2"></i>
+                            <strong>Your Question:</strong>
+                        </div>
+                        <p class="mt-2 mb-0">@Model.CurrentConversation.Question</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="response-section mb-4">
+                            <h5 class="text-primary d-flex align-items-center">
+                                <i class="fas fa-globe-americas me-2"></i>English Response:
+                            </h5>
+                            <p class="lead mb-0">@Model.CurrentConversation.EnglishResponse</p>
+                        </div>
+                        <div class="response-section">
+                            <h5 class="text-primary d-flex align-items-center">
+                                <i class="fas fa-language me-2"></i>Dominican Response:
+                            </h5>
+                            <p class="lead mb-0">@Model.CurrentConversation.DominicanResponse</p>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="card shadow-lg animate-slide-up">
+                <div class="card-header bg-light p-3">
+                    <h4 class="mb-0 d-flex align-items-center">
+                        <i class="fas fa-lightbulb me-2"></i>Suggested Questions
+                    </h4>
+                </div>
+                <div class="card-body p-3">
+                    <div class="suggested-questions-grid">
+                        @foreach (var question in Model.SuggestedQuestions)
+                        {
+                            <button class="suggested-question">
+                                <i class="fas fa-comment-dots me-2"></i>
+                                @question
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.suggested-question').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const textarea = document.querySelector('#Question');
+                textarea.value = this.textContent.trim();
+                textarea.focus();
+            });
+        });
+
+        document.getElementById('questionForm').addEventListener('submit', function(e) {
+            const submitButton = this.querySelector('button[type="submit"]');
+            const buttonText = submitButton.querySelector('.button-text');
+            const spinner = submitButton.querySelector('.spinner-border');
+            
+            if (this.checkValidity()) {
+                buttonText.classList.add('invisible');
+                spinner.classList.remove('d-none');
+            }
+        });
+    </script>
+}

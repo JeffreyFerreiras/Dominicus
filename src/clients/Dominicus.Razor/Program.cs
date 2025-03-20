@@ -1,13 +1,14 @@
-using Dominicus.Models;
-using Dominicus.Services;
+using Dominicus.Core.Abstractions.Services;
+using Dominicus.Core.Services;
+using Dominicus.Models.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.Configure<LlmConfig>(builder.Configuration.GetSection("LLM"));
+builder.Services.Configure<ClaudeConfig>(builder.Configuration.GetSection("ClaudeConfig"));
 builder.Services.AddMemoryCache();
-builder.Services.AddScoped<ITranslationService, LlmTranslationService>();
+builder.Services.AddScoped<ITranslationService, ClaudeTranslationService>();
 
 var app = builder.Build();
 

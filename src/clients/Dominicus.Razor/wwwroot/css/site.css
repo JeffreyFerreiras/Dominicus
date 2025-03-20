@@ -1,0 +1,279 @@
+:root {
+    --primary-purple: #663399;
+    --primary-light: #9966cc;
+    --dark-gray: #1a1a1a;
+    --light-gray: #2d2d2d;
+    --text-light: #ffffff;
+    --text-muted: #cccccc;
+    --gradient-start: #9966cc;
+    --gradient-end: #b088ff;
+}
+
+/* Base Styles */
+body {
+    background-color: var(--dark-gray);
+    color: var(--text-light);
+    background-image: url('../images/dominican-bg.png');
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: overlay;
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 60px;
+    font-weight: 400;
+}
+
+/* Typography */
+.text-gradient {
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 500;
+}
+
+.lead {
+    color: var(--text-light);
+    font-weight: 400;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Container and Layout */
+.container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Card Styles */
+.card {
+    background-color: rgba(45, 45, 45, 0.95);
+    border: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    background-color: var(--primary-purple);
+    color: var(--text-light);
+    border-bottom: none;
+}
+
+.card-header.bg-light {
+    background-color: var(--light-gray) !important;
+    color: var(--text-light);
+}
+
+/* Form Controls */
+.form-control {
+    background-color: var(--light-gray);
+    border: 2px solid var(--primary-purple);
+    color: var(--text-light);
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    background-color: var(--light-gray);
+    border-color: var(--primary-light);
+    color: var(--text-light);
+    box-shadow: 0 0 0 0.25rem rgba(102, 51, 153, 0.25);
+}
+
+.form-control::placeholder {
+    color: var(--text-muted);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary-purple);
+    border-color: var(--primary-purple);
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-light);
+    border-color: var(--primary-light);
+    transform: translateY(-2px);
+}
+
+/* Suggested Questions */
+.suggested-questions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.suggested-question {
+    background-color: var(--light-gray);
+    color: var(--text-light);
+    border: 2px solid var(--primary-purple);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    text-align: left;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.suggested-question:hover {
+    background-color: var(--primary-purple);
+    color: var(--text-light);
+    transform: translateY(-2px);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.6s ease-out;
+}
+
+.animate-slide-up {
+    animation: slideUp 0.6s ease-out;
+}
+
+/* Response Sections */
+.response-section {
+    padding: 1.5rem;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.response-section:hover {
+    transform: translateX(5px);
+}
+
+.response-section:last-child {
+    margin-bottom: 0;
+}
+
+.response-section h5 {
+    font-weight: 600;
+    color: var(--gradient-end);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.response-section .lead {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* Loading State */
+.button-text.invisible {
+    visibility: hidden;
+}
+
+.spinner-border {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Dominican Header */
+.dominican-header {
+    position: relative;
+    padding-left: 60px;
+    display: inline-block;
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.dominican-header::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 32px;
+    background-image: url('../images/dominican-flag.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+/* Plantain Decoration */
+.plantain-decoration {
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    width: 100px;
+    height: 100px;
+    background-image: url('../images/plantain.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.7;
+    pointer-events: none;
+    transition: transform 0.3s ease;
+}
+
+.card:hover .plantain-decoration {
+    transform: rotate(10deg);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .suggested-questions-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .response-section {
+        padding: 1rem;
+    }
+}
+
+/* Focus States */
+.btn:focus, 
+.btn:active:focus, 
+.btn-link.nav-link:focus, 
+.form-control:focus, 
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.25rem rgba(102, 51, 153, 0.25);
+}
+
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}

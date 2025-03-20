@@ -1,4 +1,4 @@
-namespace Dominicus.Models;
+namespace Dominicus.Models.Models;
 
 public class Conversation
 {

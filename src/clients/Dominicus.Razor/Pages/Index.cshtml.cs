@@ -1,5 +1,5 @@
-using Dominicus.Models;
-using Dominicus.Services;
+using Dominicus.Core.Abstractions.Services;
+using Dominicus.Models.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
