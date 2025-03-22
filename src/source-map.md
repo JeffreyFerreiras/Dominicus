@@ -11,7 +11,6 @@ Dominicus is a .NET solution that implements a Razor-based web application using
   - `services/` - Service layer projects
     - `Dominicus.Core/` - Core domain implementation
     - `Dominicus.Core.Abstractions/` - Domain interfaces and abstractions
-    - `Dominicus.Infrastructure/` - Infrastructure implementations
   - `models/` - Shared models and DTOs
     - `Dominicus.Models/` - Shared models and DTOs
 
@@ -42,13 +41,6 @@ Dominicus is a .NET solution that implements a Razor-based web application using
   - `Models/` - Domain models and configurations
     - `LlmConfig.cs` - LLM configuration model
 
-### Infrastructure Layer
-- `Dominicus.Infrastructure/` - Technical concerns
-  - External service integrations
-  - Data access implementations
-  - Logging and monitoring
-  - Security implementations
-
 ### Shared Layer
 - `Dominicus.Models/` - Common components
   - Shared DTOs
@@ -61,18 +53,15 @@ Dominicus is a .NET solution that implements a Razor-based web application using
 ### Project Organization
 - Domain logic is centralized in the Core project
 - Abstractions are separated into Core.Abstractions
-- Infrastructure concerns are isolated in the Infrastructure project
 - Shared code is placed in the Models project
 
 ### Dependencies
 - Core project depends on Core.Abstractions and Models
-- Infrastructure project depends on Core and Models
 - Core.Abstractions has no external dependencies
 - Models project has no external dependencies
 
 ### Configuration Management
 - Domain-specific configuration in Core.Abstractions
-- Infrastructure configuration in Infrastructure
 - Application configuration in Razor project
 
 ### Build and Deployment
@@ -86,3 +75,4 @@ Dominicus is a .NET solution that implements a Razor-based web application using
 - Consider microservices architecture for scalability
 - Implement API Gateway for service communication
 - Add comprehensive logging and monitoring
+- Consider adding Infrastructure layer for external service integrations

@@ -1,17 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-	<PropertyGroup>
-		<Nullable>enable</Nullable>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<LangVersion>latest</LangVersion>
-		<OutputType>Exe</OutputType>
-	</PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <OutputType>Exe</OutputType>
+    <UserSecretsId>37710a71-a546-4191-8a39-0f9dd5891d69</UserSecretsId>
+  </PropertyGroup>
 
-
-	<ItemGroup>
-		<ProjectReference Include="..\..\services\Dominicus.Core\Dominicus.Core.csproj" />
-		<ProjectReference Include="..\..\services\Dominicus.Core.Abstractions\Dominicus.Core.Abstractions.csproj" />
-		<ProjectReference Include="..\..\models\Dominicus.Models\Dominicus.Models.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\services\Dominicus.Core\Dominicus.Core.csproj" />
+    <ProjectReference Include="..\..\services\Dominicus.Core.Abstractions\Dominicus.Core.Abstractions.csproj" />
+    <ProjectReference Include="..\..\models\Dominicus.Models\Dominicus.Models.csproj" />
+  </ItemGroup>
 
 </Project>

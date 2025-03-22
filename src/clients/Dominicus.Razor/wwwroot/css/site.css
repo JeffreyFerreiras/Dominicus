@@ -1,12 +1,17 @@
 :root {
-    --primary-purple: #663399;
-    --primary-light: #9966cc;
-    --dark-gray: #1a1a1a;
-    --light-gray: #2d2d2d;
+    --primary-purple: #9966cc;
+    --primary-light: #b088ff;
+    --dark-gray: #121212;
+    --light-gray: #1e1e1e;
     --text-light: #ffffff;
-    --text-muted: #cccccc;
+    --text-muted: #a0a0a0;
     --gradient-start: #9966cc;
     --gradient-end: #b088ff;
+    --card-bg: rgba(30, 30, 30, 0.95);
+    --hover-bg: rgba(153, 102, 204, 0.1);
+    --chat-bg: rgba(24, 24, 24, 0.95);
+    --chat-border: rgba(153, 102, 204, 0.3);
+    --chat-hover: rgba(153, 102, 204, 0.15);
 }
 
 /* Base Styles */
@@ -17,7 +22,7 @@ body {
     background-attachment: fixed;
     background-size: cover;
     background-position: center;
-    background-blend-mode: overlay;
+    background-blend-mode: multiply;
     font-family: 'Poppins', sans-serif;
     margin-bottom: 60px;
     font-weight: 400;
@@ -46,19 +51,22 @@ body {
 
 /* Card Styles */
 .card {
-    background-color: rgba(45, 45, 45, 0.95);
-    border: none;
+    background-color: var(--card-bg);
+    border: 1px solid rgba(153, 102, 204, 0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+    border-color: var(--primary-purple);
 }
 
 .card-header {
-    background-color: var(--primary-purple);
+    background-color: rgba(153, 102, 204, 0.2);
     color: var(--text-light);
-    border-bottom: none;
+    border-bottom: 1px solid rgba(153, 102, 204, 0.2);
 }
 
 .card-header.bg-light {
@@ -69,16 +77,16 @@ body {
 /* Form Controls */
 .form-control {
     background-color: var(--light-gray);
-    border: 2px solid var(--primary-purple);
+    border: 2px solid rgba(153, 102, 204, 0.3);
     color: var(--text-light);
     transition: all 0.3s ease;
 }
 
 .form-control:focus {
     background-color: var(--light-gray);
-    border-color: var(--primary-light);
+    border-color: var(--primary-purple);
     color: var(--text-light);
-    box-shadow: 0 0 0 0.25rem rgba(102, 51, 153, 0.25);
+    box-shadow: 0 0 0 0.25rem rgba(153, 102, 204, 0.25);
 }
 
 .form-control::placeholder {
@@ -154,14 +162,17 @@ body {
 /* Response Sections */
 .response-section {
     padding: 1.5rem;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: var(--card-bg);
+    border: 1px solid rgba(153, 102, 204, 0.2);
     border-radius: 0.5rem;
     margin-bottom: 1rem;
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .response-section:hover {
     transform: translateX(5px);
+    border-color: var(--primary-purple);
+    background-color: var(--hover-bg);
 }
 
 .response-section:last-child {
@@ -276,4 +287,164 @@ html {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
+}
+
+/* Chat Styles */
+.chat-container {
+    background-color: var(--chat-bg);
+    border: 1px solid var(--chat-border);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.6s ease-out;
+}
+
+.chat-message {
+    display: flex;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: slideInMessage 0.5s ease-out forwards;
+}
+
+.chat-message:last-child {
+    margin-bottom: 0;
+}
+
+.chat-message.user-message {
+    justify-content: flex-end;
+}
+
+.message-content {
+    max-width: 80%;
+    padding: 1rem 1.5rem;
+    border-radius: 1rem;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.user-message .message-content {
+    background: linear-gradient(135deg, var(--primary-purple), var(--primary-light));
+    color: var(--text-light);
+    border-top-right-radius: 0.25rem;
+    animation: slideInRight 0.5s ease-out;
+}
+
+.assistant-message .message-content {
+    background-color: var(--light-gray);
+    color: var(--text-light);
+    border-top-left-radius: 0.25rem;
+    animation: slideInLeft 0.5s ease-out;
+}
+
+.message-content:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.user-message .message-content:hover {
+    background: linear-gradient(135deg, var(--primary-light), var(--gradient-end));
+}
+
+.assistant-message .message-content:hover {
+    background-color: var(--chat-hover);
+}
+
+.message-time {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+    opacity: 0.8;
+}
+
+/* Chat Animations */
+@keyframes slideInMessage {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Chat Input Area */
+.chat-input-container {
+    background-color: var(--chat-bg);
+    border: 1px solid var(--chat-border);
+    border-radius: 1rem;
+    padding: 1rem;
+    margin-top: 1rem;
+    animation: slideUp 0.6s ease-out;
+}
+
+.chat-input-wrapper {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.chat-input {
+    flex: 1;
+    background-color: var(--light-gray);
+    border: 2px solid var(--chat-border);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    color: var(--text-light);
+    transition: all 0.3s ease;
+}
+
+.chat-input:focus {
+    border-color: var(--primary-purple);
+    box-shadow: 0 0 0 0.25rem rgba(153, 102, 204, 0.25);
+    background-color: var(--chat-hover);
+}
+
+.send-button {
+    background: linear-gradient(135deg, var(--primary-purple), var(--primary-light));
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    color: var(--text-light);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.send-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, var(--primary-light), var(--gradient-end));
+}
+
+.send-button i {
+    transition: transform 0.3s ease;
+}
+
+.send-button:hover i {
+    transform: translateX(4px);
 }

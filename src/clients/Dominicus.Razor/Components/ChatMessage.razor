@@ -1,0 +1,47 @@
+@using Dominicus.Models.Models
+@namespace Dominicus.Razor.Pages.Shared.Components
+
+<div class="chat-message @(IsUser ? "user-message" : "bot-message") mb-3">
+    <div class="message-content">
+        @if (!IsUser)
+        {
+            <div class="bot-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+        }
+        <div class="message-bubble">
+            @if (!string.IsNullOrEmpty(Question))
+            {
+                <div class="question mb-2">@Question</div>
+            }
+            @if (!string.IsNullOrEmpty(EnglishResponse))
+            {
+                <div class="english-response mb-2">
+                    <small class="text-muted">English:</small>
+                    <div>@EnglishResponse</div>
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(DominicanResponse))
+            {
+                <div class="dominican-response">
+                    <small class="text-muted">Dominican:</small>
+                    <div>@DominicanResponse</div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public bool IsUser { get; set; }
+
+    [Parameter]
+    public string? Question { get; set; }
+
+    [Parameter]
+    public string? EnglishResponse { get; set; }
+
+    [Parameter]
+    public string? DominicanResponse { get; set; }
+} 

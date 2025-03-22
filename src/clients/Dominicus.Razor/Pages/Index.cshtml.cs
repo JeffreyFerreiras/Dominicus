@@ -9,6 +9,7 @@ public class IndexModel : PageModel
 {
     private readonly ITranslationService _translationService;
     private readonly ILogger<IndexModel> _logger;
+    private const int MaxHistoryItems = 50;
 
     public IndexModel(ITranslationService translationService, ILogger<IndexModel> logger)
     {
@@ -19,15 +20,26 @@ public class IndexModel : PageModel
     [BindProperty]
     public string Question { get; set; } = string.Empty;
 
-    public Conversation? CurrentConversation { get; private set; }
+    public List<Conversation> ConversationHistory { get; private set; } = new();
 
     public List<string> SuggestedQuestions { get; } = new()
     {
         "How are you today?",
         "What's the weather like?",
         "Tell me a joke",
-        "What's your favorite food?"
+        "What's your favorite Dominican food?",
+        "Teach me some Dominican slang",
+        "What's your favorite Dominican music?"
     };
+
+    public void OnGet()
+    {
+        var history = HttpContext.Session.Get<List<Conversation>>("ConversationHistory");
+        if (history != null)
+        {
+            ConversationHistory = history;
+        }
+    }
 
     public async Task<IActionResult> OnPostAsync()
     {
@@ -40,12 +52,25 @@ public class IndexModel : PageModel
         {
             var (english, dominican) = await _translationService.GetTranslatedResponseAsync(Question);
             
-            CurrentConversation = new Conversation
+            var conversation = new Conversation
             {
                 Question = Question,
                 EnglishResponse = english,
-                DominicanResponse = dominican
+                DominicanResponse = dominican,
+                Timestamp = DateTime.UtcNow
             };
+
+            ConversationHistory = HttpContext.Session.Get<List<Conversation>>("ConversationHistory") ?? new List<Conversation>();
+            ConversationHistory.Add(conversation);
+
+            // Keep only the most recent conversations
+            if (ConversationHistory.Count > MaxHistoryItems)
+            {
+                ConversationHistory = ConversationHistory.Skip(ConversationHistory.Count - MaxHistoryItems).ToList();
+            }
+
+            HttpContext.Session.Set("ConversationHistory", ConversationHistory);
+            Question = string.Empty;
         }
         catch (Exception ex)
         {
@@ -54,5 +79,20 @@ public class IndexModel : PageModel
         }
 
         return Page();
+    }
+}
+
+// Session extension methods
+public static class SessionExtensions
+{
+    public static void Set<T>(this ISession session, string key, T value)
+    {
+        session.SetString(key, System.Text.Json.JsonSerializer.Serialize(value));
+    }
+
+    public static T? Get<T>(this ISession session, string key)
+    {
+        var value = session.GetString(key);
+        return value == null ? default : System.Text.Json.JsonSerializer.Deserialize<T>(value);
     }
 }

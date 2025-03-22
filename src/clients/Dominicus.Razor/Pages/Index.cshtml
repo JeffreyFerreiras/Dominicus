@@ -1,91 +1,83 @@
 ﻿@page
+@using Dominicus.Razor.Pages.Shared.Components
 @model IndexModel
 @{
     ViewData["Title"] = "Dominicus";
 }
 
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="text-center mb-5 animate-fade-in">
-                <h1 class="display-4 dominican-header mb-4">Dominicus</h1>
-                <p class="lead text-gradient">Ask me anything and I'll respond in Dominican Spanish!</p>
-            </div>
+<link rel="stylesheet" href="~/css/chat.css" />
 
-            <div class="card shadow-lg mb-4 animate-slide-up">
-                <div class="card-body position-relative p-4">
-                    <form method="post" id="questionForm" class="needs-validation" novalidate>
-                        <div class="form-group mb-4">
-                            <label for="Question" class="form-label visually-hidden">Your Question</label>
-                            <textarea asp-for="Question" 
-                                    class="form-control form-control-lg" 
-                                    rows="3" 
-                                    placeholder="Type your question here..."
-                                    required></textarea>
-                            <span asp-validation-for="Question" class="text-danger"></span>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-lg w-100 position-relative">
-                            <span class="button-text">
-                                <i class="fas fa-paper-plane me-2"></i>Ask Dominicus
-                            </span>
-                            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                        </button>
-                    </form>
-                    <div class="plantain-decoration"></div>
-                </div>
-            </div>
+<div class="chat-container">
+    <div class="chat-header">
+        <h1 class="dominican-header">Dominicus</h1>
+        <p class="text-gradient">Your Dominican Spanish AI Assistant</p>
+    </div>
 
-            @if (Model.CurrentConversation != null)
+    <div class="chat-messages" id="chatMessages">
+        @if (Model.ConversationHistory.Any())
+        {
+            foreach (var conversation in Model.ConversationHistory)
             {
-                <div class="card shadow-lg mb-4 conversation-card animate-fade-in">
-                    <div class="card-header p-3">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-question-circle text-primary me-2"></i>
-                            <strong>Your Question:</strong>
-                        </div>
-                        <p class="mt-2 mb-0">@Model.CurrentConversation.Question</p>
-                    </div>
-                    <div class="card-body p-4">
-                        <div class="response-section mb-4">
-                            <h5 class="text-primary d-flex align-items-center">
-                                <i class="fas fa-globe-americas me-2"></i>English Response:
-                            </h5>
-                            <p class="lead mb-0">@Model.CurrentConversation.EnglishResponse</p>
-                        </div>
-                        <div class="response-section">
-                            <h5 class="text-primary d-flex align-items-center">
-                                <i class="fas fa-language me-2"></i>Dominican Response:
-                            </h5>
-                            <p class="lead mb-0">@Model.CurrentConversation.DominicanResponse</p>
-                        </div>
-                    </div>
-                </div>
-            }
+                <ChatMessage IsUser="true"
+                            Question="@conversation.Question" />
 
-            <div class="card shadow-lg animate-slide-up">
-                <div class="card-header bg-light p-3">
-                    <h4 class="mb-0 d-flex align-items-center">
-                        <i class="fas fa-lightbulb me-2"></i>Suggested Questions
-                    </h4>
-                </div>
-                <div class="card-body p-3">
-                    <div class="suggested-questions-grid">
-                        @foreach (var question in Model.SuggestedQuestions)
-                        {
-                            <button class="suggested-question">
-                                <i class="fas fa-comment-dots me-2"></i>
-                                @question
-                            </button>
-                        }
-                    </div>
-                </div>
+                <ChatMessage EnglishResponse="@conversation.EnglishResponse"
+                            DominicanResponse="@conversation.DominicanResponse" />
+            }
+        }
+        else
+        {
+            <div class="empty-state text-center">
+                <i class="fas fa-comments fa-3x mb-3"></i>
+                <h3>Start a Conversation</h3>
+                <p>Ask me anything and I'll respond in both English and Dominican Spanish!</p>
             </div>
+        }
+    </div>
+
+    <div class="chat-input">
+        <form method="post" id="questionForm" class="needs-validation" novalidate>
+            <div class="input-group">
+                <textarea asp-for="Question" 
+                         class="form-control" 
+                         rows="1"
+                         placeholder="Type your message..."
+                         required
+                         onkeydown="handleKeyPress(event)"></textarea>
+                <button type="submit" class="btn btn-primary">
+                    <span class="button-text">
+                        <i class="fas fa-paper-plane"></i>
+                    </span>
+                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                </button>
+            </div>
+        </form>
+
+        <div class="suggested-questions">
+            @foreach (var question in Model.SuggestedQuestions)
+            {
+                <button class="btn btn-outline-secondary btn-sm suggested-question">
+                    @question
+                </button>
+            }
         </div>
     </div>
 </div>
 
 @section Scripts {
     <script>
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                document.getElementById('questionForm').submit();
+            }
+        }
+
+        function scrollToBottom() {
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
         document.querySelectorAll('.suggested-question').forEach(button => {
             button.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -105,5 +97,18 @@
                 spinner.classList.remove('d-none');
             }
         });
+
+        // Auto-resize textarea
+        const textarea = document.querySelector('#Question');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        // Scroll to bottom on page load and after new messages
+        window.addEventListener('load', scrollToBottom);
+        if (window.location.href.includes('?handler=')) {
+            scrollToBottom();
+        }
     </script>
 }
