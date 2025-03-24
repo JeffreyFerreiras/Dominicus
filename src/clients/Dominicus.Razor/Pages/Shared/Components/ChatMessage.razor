@@ -1,5 +1,4 @@
 @using Dominicus.Models
- 
 @namespace Dominicus.Razor.Pages.Shared.Components
 
 <div class="chat-message @(IsUser ? "user-message" : "bot-message") mb-3">
@@ -13,20 +12,20 @@
         <div class="message-bubble">
             @if (!string.IsNullOrEmpty(Question))
             {
-                <div class="question mb-2">@Question</div>
+                <div class="question mb-2 text-visible">@Question</div>
             }
             @if (!string.IsNullOrEmpty(EnglishResponse))
             {
                 <div class="english-response mb-2">
                     <small class="text-muted">English:</small>
-                    <div>@EnglishResponse</div>
+                    <div class="text-visible">@EnglishResponse</div>
                 </div>
             }
             @if (!string.IsNullOrEmpty(DominicanResponse))
             {
                 <div class="dominican-response">
                     <small class="text-muted">Dominican:</small>
-                    <div>@DominicanResponse</div>
+                    <div class="text-visible">@DominicanResponse</div>
                 </div>
             }
         </div>
@@ -45,4 +44,4 @@
     
     [Parameter]
     public string? DominicanResponse { get; set; }
-}
+} 

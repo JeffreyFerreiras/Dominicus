@@ -6,12 +6,12 @@
     ViewData["Title"] = "Dominicus";
 }
 
-<link rel="stylesheet" href="~/css/chat.css" />
+<link rel="stylesheet" href="~/css/chat.css" asp-append-version="true" />
 
 <div class="chat-container">
     <div class="chat-header">
-        <h1 class="dominican-header">Dominicus</h1>
-        <p class="text-gradient">Your Dominican Spanish AI Assistant</p>
+        <h1>Dominicus</h1>
+        <p>Your Dominican Spanish AI Assistant</p>
     </div>
 
     <div class="chat-messages" id="chatMessages">
@@ -38,27 +38,33 @@
     </div>
 
     <div class="chat-input">
-        <form method="post" id="questionForm" class="needs-validation" novalidate>
+        <form id="questionForm" class="needs-validation" novalidate>
             <div class="input-group">
-                <textarea asp-for="Question" 
+                <textarea id="Question" name="Question"
                          class="form-control" 
                          rows="1"
                          placeholder="Type your message..."
-                         required
-                         onkeydown="handleKeyPress(event)"></textarea>
-                <button type="submit" class="btn btn-primary">
-                    <span class="button-text">
-                        <i class="fas fa-paper-plane"></i>
-                    </span>
-                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                         required></textarea>
+                <button type="submit" class="btn btn-primary send-button">
+                    <div class="button-content">
+                        <span class="button-icon">
+                            <i class="fas fa-paper-plane"></i>
+                        </span>
+                        <span class="spinner">
+                            <div class="bounce1"></div>
+                            <div class="bounce2"></div>
+                            <div class="bounce3"></div>
+                        </span>
+                    </div>
                 </button>
             </div>
+            <div class="invalid-feedback">Please enter a message.</div>
         </form>
 
         <div class="suggested-questions">
             @foreach (var question in Model.SuggestedQuestions)
             {
-                <button class="btn btn-outline-secondary btn-sm suggested-question">
+                <button class="suggested-question">
                     @question
                 </button>
             }
@@ -66,51 +72,60 @@
     </div>
 </div>
 
+<!-- Typing indicator template -->
+<template id="typing-indicator-template">
+    <div class="chat-message bot-message mb-3 typing-indicator-container">
+        <div class="message-content">
+            <div class="bot-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="message-bubble typing-indicator">
+                <div class="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- Templates for message rendering -->
+<template id="user-message-template">
+    <div class="chat-message user-message mb-3 message-animate-in">
+        <div class="message-content">
+            <div class="message-bubble">
+                <div class="question"></div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="bot-message-template">
+    <div class="chat-message bot-message mb-3 message-animate-in">
+        <div class="message-content">
+            <div class="bot-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="message-bubble">
+                <div class="english-response">
+                    <small>English:</small>
+                    <div></div>
+                </div>
+                <div class="dominican-response">
+                    <small>Dominican:</small>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- CSRF token for AJAX requests -->
+<form id="antiforgery-form" method="post">
+    @Html.AntiForgeryToken()
+</form>
+
 @section Scripts {
-    <script>
-        function handleKeyPress(event) {
-            if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault();
-                document.getElementById('questionForm').submit();
-            }
-        }
-
-        function scrollToBottom() {
-            const chatMessages = document.getElementById('chatMessages');
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        document.querySelectorAll('.suggested-question').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                const textarea = document.querySelector('#Question');
-                textarea.value = this.textContent.trim();
-                textarea.focus();
-            });
-        });
-
-        document.getElementById('questionForm').addEventListener('submit', function(e) {
-            const submitButton = this.querySelector('button[type="submit"]');
-            const buttonText = submitButton.querySelector('.button-text');
-            const spinner = submitButton.querySelector('.spinner-border');
-            
-            if (this.checkValidity()) {
-                buttonText.classList.add('invisible');
-                spinner.classList.remove('d-none');
-            }
-        });
-
-        // Auto-resize textarea
-        const textarea = document.querySelector('#Question');
-        textarea.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = (this.scrollHeight) + 'px';
-        });
-
-        // Scroll to bottom on page load and after new messages
-        window.addEventListener('load', scrollToBottom);
-        if (window.location.href.includes('?handler=')) {
-            scrollToBottom();
-        }
-    </script>
+    <script src="~/js/chat.js" asp-append-version="true"></script>
 }

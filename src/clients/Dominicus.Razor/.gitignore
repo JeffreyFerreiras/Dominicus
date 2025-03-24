@@ -1,0 +1,13 @@
+# Node.js dependencies
+node_modules/
+
+# Jest coverage reports
+coverage/
+
+# npm logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Jest cache
+.jest-cache 

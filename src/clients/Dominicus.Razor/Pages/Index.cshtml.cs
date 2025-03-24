@@ -48,24 +48,41 @@ public class IndexModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
+        _logger.LogInformation($"Form submitted with question: {Question}");
+        
         if (string.IsNullOrWhiteSpace(Question))
         {
+            _logger.LogWarning("Empty question submitted");
+            ModelState.AddModelError("Question", "Please enter a question");
             return Page();
         }
 
         try
         {
+            // Load existing conversation history first
+            ConversationHistory = HttpContext.Session.Get<List<Conversation>>("ConversationHistory") ?? new List<Conversation>();
+            
+            _logger.LogInformation($"Getting translation for: {Question}");
             var (english, dominican) = await _translationService.GetTranslatedResponseAsync(Question);
+            
+            // Log with null check
+            if (english != null)
+            {
+                _logger.LogInformation($"Received response - English: {english.Substring(0, Math.Min(50, english.Length))}...");
+            }
+            else
+            {
+                _logger.LogWarning("Received null English response");
+            }
             
             var conversation = new Conversation
             {
                 Question = Question,
-                EnglishResponse = english,
-                DominicanResponse = dominican,
+                EnglishResponse = english ?? "No response received",
+                DominicanResponse = dominican ?? "No response received",
                 Timestamp = DateTime.UtcNow
             };
 
-            ConversationHistory = HttpContext.Session.Get<List<Conversation>>("ConversationHistory") ?? new List<Conversation>();
             ConversationHistory.Add(conversation);
             _logger.LogInformation($"Added new conversation. Total count: {ConversationHistory.Count}");
 
@@ -75,31 +92,75 @@ public class IndexModel : PageModel
                 ConversationHistory = ConversationHistory.Skip(ConversationHistory.Count - MaxHistoryItems).ToList();
             }
 
+            // Ensure HTML escaped values are captured correctly
             HttpContext.Session.Set("ConversationHistory", ConversationHistory);
             _logger.LogInformation("Saved conversation history to session");
+            
+            // Important: Clear the question field AFTER the model has been processed
+            ModelState.Clear();
             Question = string.Empty;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error processing question");
+            _logger.LogError(ex, "Error processing question: {Question}", Question);
             ModelState.AddModelError("", "Sorry, something went wrong processing your question.");
         }
 
         return Page();
     }
+    
+    public async Task<IActionResult> OnPostAskAsync([FromBody] QuestionRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Question))
+        {
+            return BadRequest(new { success = false, error = "Question cannot be empty" });
+        }
+
+        try
+        {
+            // Load existing conversation history
+            ConversationHistory = HttpContext.Session.Get<List<Conversation>>("ConversationHistory") ?? new List<Conversation>();
+            
+            _logger.LogInformation($"API request with question: {request.Question}");
+            var (english, dominican) = await _translationService.GetTranslatedResponseAsync(request.Question);
+            
+            var conversation = new Conversation
+            {
+                Question = request.Question,
+                EnglishResponse = english ?? "No response received",
+                DominicanResponse = dominican ?? "No response received",
+                Timestamp = DateTime.UtcNow
+            };
+
+            ConversationHistory.Add(conversation);
+            
+            // Keep only the most recent conversations
+            if (ConversationHistory.Count > MaxHistoryItems)
+            {
+                ConversationHistory = ConversationHistory.Skip(ConversationHistory.Count - MaxHistoryItems).ToList();
+            }
+
+            HttpContext.Session.Set("ConversationHistory", ConversationHistory);
+            
+            return new JsonResult(new { 
+                success = true, 
+                response = new {
+                    question = conversation.Question,
+                    englishResponse = conversation.EnglishResponse,
+                    dominicanResponse = conversation.DominicanResponse,
+                    timestamp = conversation.Timestamp
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error processing API question: {Question}", request.Question);
+            return StatusCode(500, new { success = false, error = "An error occurred processing your request" });
+        }
+    }
 }
 
-// Session extension methods
-public static class SessionExtensions
+public class QuestionRequest
 {
-    public static void Set<T>(this ISession session, string key, T value)
-    {
-        session.SetString(key, System.Text.Json.JsonSerializer.Serialize(value));
-    }
-
-    public static T? Get<T>(this ISession session, string key)
-    {
-        var value = session.GetString(key);
-        return value == null ? default : System.Text.Json.JsonSerializer.Deserialize<T>(value);
-    }
+    public string Question { get; set; } = string.Empty;
 }

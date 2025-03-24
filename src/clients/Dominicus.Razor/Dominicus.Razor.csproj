@@ -7,6 +7,8 @@
     <LangVersion>latest</LangVersion>
     <OutputType>Exe</OutputType>
     <UserSecretsId>37710a71-a546-4191-8a39-0f9dd5891d69</UserSecretsId>
+    <GenerateStaticWebAssetsManifest>true</GenerateStaticWebAssetsManifest>
+    <GenerateMvcApplicationPartsAssemblyAttributes>false</GenerateMvcApplicationPartsAssemblyAttributes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,5 +20,12 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="9.0.3" />
   </ItemGroup>
+
+  <!-- Fix for duplicate static web assets -->
+  <Target Name="RemoveDuplicateStaticWebAssets" BeforeTargets="GetStaticWebAssetsToCopy">
+    <ItemGroup>
+      <_WebAssetsToCopy Remove="@(_WebAssetsToCopy)" Condition="$([System.String]::Copy('%(FullPath)').Contains('Dominicus.styles.css'))" />
+    </ItemGroup>
+  </Target>
 
 </Project>

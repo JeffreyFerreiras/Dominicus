@@ -1,72 +1,78 @@
 :root {
-    --primary-purple: #9966cc;
-    --primary-light: #b088ff;
-    --dark-gray: #121212;
-    --light-gray: #1e1e1e;
+    --primary-purple: #8b5cf6;
+    --primary-light: #a78bfa;
+    --dark-gray: #0f0f13;
+    --light-gray: #1a1a23;
     --text-light: #ffffff;
-    --text-muted: #a0a0a0;
-    --gradient-start: #9966cc;
-    --gradient-end: #b088ff;
-    --card-bg: rgba(30, 30, 30, 0.95);
-    --hover-bg: rgba(153, 102, 204, 0.1);
-    --chat-bg: rgba(24, 24, 24, 0.95);
-    --chat-border: rgba(153, 102, 204, 0.3);
-    --chat-hover: rgba(153, 102, 204, 0.15);
+    --text-muted: #9ca3af;
+    --gradient-start: #0f0f13;
+    --gradient-end: #1a1a23;
+    --card-bg: rgba(26, 26, 35, 0.95);
+    --hover-bg: rgba(139, 92, 246, 0.1);
+    --chat-bg: rgba(15, 15, 19, 0.95);
+    --chat-border: rgba(139, 92, 246, 0.2);
+    --chat-hover: rgba(139, 92, 246, 0.05);
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.25);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3);
 }
 
 /* Base Styles */
 body {
-    background-color: var(--dark-gray);
+    background: var(--dark-gray);
     color: var(--text-light);
-    background-image: url('../images/dominican-bg.png');
-    background-attachment: fixed;
-    background-size: cover;
-    background-position: center;
-    background-blend-mode: multiply;
-    font-family: 'Poppins', sans-serif;
-    margin-bottom: 60px;
-    font-weight: 400;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    line-height: 1.6;
 }
 
 /* Typography */
 .text-gradient {
-    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    background: linear-gradient(135deg, var(--primary-purple), var(--primary-light));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .lead {
     color: var(--text-light);
     font-weight: 400;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    text-shadow: var(--shadow-sm);
 }
 
 /* Container and Layout */
 .container {
     position: relative;
     z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
 }
 
 /* Card Styles */
 .card {
     background-color: var(--card-bg);
-    border: 1px solid rgba(153, 102, 204, 0.2);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--chat-border);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    color: var(--text-light);
 }
 
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-lg);
     border-color: var(--primary-purple);
 }
 
 .card-header {
-    background-color: rgba(153, 102, 204, 0.2);
+    background-color: var(--light-gray);
     color: var(--text-light);
-    border-bottom: 1px solid rgba(153, 102, 204, 0.2);
+    border-bottom: 1px solid var(--chat-border);
+    border-radius: 1rem 1rem 0 0 !important;
 }
 
 .card-header.bg-light {
@@ -77,16 +83,18 @@ body {
 /* Form Controls */
 .form-control {
     background-color: var(--light-gray);
-    border: 2px solid rgba(153, 102, 204, 0.3);
+    border: 2px solid rgba(108, 62, 188, 0.3);
+    border-radius: 0.75rem;
     color: var(--text-light);
     transition: all 0.3s ease;
+    padding: 0.75rem 1rem;
 }
 
 .form-control:focus {
     background-color: var(--light-gray);
     border-color: var(--primary-purple);
     color: var(--text-light);
-    box-shadow: 0 0 0 0.25rem rgba(153, 102, 204, 0.25);
+    box-shadow: 0 0 0 0.25rem rgba(108, 62, 188, 0.25);
 }
 
 .form-control::placeholder {
@@ -95,39 +103,99 @@ body {
 
 /* Buttons */
 .btn-primary {
-    background-color: var(--primary-purple);
-    border-color: var(--primary-purple);
+    background: var(--light-gray);
+    border: 1px solid var(--primary-purple);
+    border-radius: 0.75rem;
+    color: var(--primary-purple);
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background: var(--primary-purple);
+    color: var(--text-light);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.btn-outline-secondary {
+    border: 1px solid var(--primary-purple);
+    color: var(--primary-purple);
+    background: var(--light-gray);
+    border-radius: 0.75rem;
     transition: all 0.3s ease;
 }
 
-.btn-primary:hover {
-    background-color: var(--primary-light);
+.btn-outline-secondary:hover,
+.btn-outline-secondary:focus {
+    background: var(--light-gray);
+    color: var(--primary-light);
     border-color: var(--primary-light);
     transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
 /* Suggested Questions */
-.suggested-questions-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
+.suggested-questions {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    padding: 1rem 0;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.suggested-questions::-webkit-scrollbar {
+    display: none;
 }
 
 .suggested-question {
-    background-color: var(--light-gray);
-    color: var(--text-light);
-    border: 2px solid var(--primary-purple);
-    border-radius: 0.5rem;
-    padding: 1rem;
-    text-align: left;
+    background: var(--light-gray);
+    color: var(--primary-purple);
+    border: 1px solid var(--primary-purple);
+    border-radius: 1rem;
+    padding: 0.75rem 1.25rem;
+    white-space: nowrap;
     transition: all 0.3s ease;
-    cursor: pointer;
+    font-weight: 500;
 }
 
 .suggested-question:hover {
-    background-color: var(--primary-purple);
-    color: var(--text-light);
+    background: var(--light-gray);
+    color: var(--primary-light);
+    border-color: var(--primary-light);
     transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Empty State */
+.empty-state {
+    color: var(--text-muted);
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: var(--primary-purple);
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
+}
+
+.empty-state h3 {
+    font-size: 1.75rem;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 /* Animations */
@@ -159,47 +227,37 @@ body {
     animation: slideUp 0.6s ease-out;
 }
 
-/* Response Sections */
-.response-section {
-    padding: 1.5rem;
-    background-color: var(--card-bg);
-    border: 1px solid rgba(153, 102, 204, 0.2);
-    border-radius: 0.5rem;
-    margin-bottom: 1rem;
-    transition: all 0.3s ease;
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
 }
 
-.response-section:hover {
-    transform: translateX(5px);
-    border-color: var(--primary-purple);
-    background-color: var(--hover-bg);
+::-webkit-scrollbar-track {
+    background: var(--dark-gray);
 }
 
-.response-section:last-child {
-    margin-bottom: 0;
+::-webkit-scrollbar-thumb {
+    background: var(--primary-purple);
+    border-radius: 4px;
 }
 
-.response-section h5 {
-    font-weight: 600;
-    color: var(--gradient-end);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-light);
 }
 
-.response-section .lead {
-    font-size: 1.1rem;
-    line-height: 1.6;
-}
-
-/* Loading State */
-.button-text.invisible {
-    visibility: hidden;
-}
-
-.spinner-border {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    .card {
+        border-radius: 0.75rem;
+    }
+    
+    .btn-primary, .btn-outline-secondary, .suggested-question {
+        padding: 0.5rem 1rem;
+    }
 }
 
 /* Dominican Header */
@@ -243,17 +301,6 @@ body {
 
 .card:hover .plantain-decoration {
     transform: rotate(10deg);
-}
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    .suggested-questions-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .response-section {
-        padding: 1rem;
-    }
 }
 
 /* Focus States */
@@ -447,4 +494,10 @@ html {
 
 .send-button:hover i {
     transform: translateX(4px);
+}
+
+/* Chat Header */
+.chat-header {
+    background: var(--light-gray);
+    border-bottom: 1px solid var(--chat-border);
 }

@@ -18,13 +18,18 @@ public class ClaudeTranslationService : ITranslationService
         ILogger<ClaudeTranslationService> logger,
         IOptions<ClaudeConfig> config)
     {
-        _logger = logger;
-        _config = config.Value;
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _config = config?.Value ?? throw new ArgumentNullException(nameof(config));
         _client = new AnthropicClient(_config.ApiKey);
     }
 
     public async Task<(string englishResponse, string dominicanResponse)> GetTranslatedResponseAsync(string question)
     {
+        if (string.IsNullOrWhiteSpace(question))
+        {
+            throw new ArgumentException("Question cannot be null or empty", nameof(question));
+        }
+        
         try
         {
             var systemPrompt = @"You are a friendly and humorous Dominican AI assistant. When responding:
