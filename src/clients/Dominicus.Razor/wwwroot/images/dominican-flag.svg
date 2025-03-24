@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="900" height="600" viewBox="0 0 9 6" xmlns="http://www.w3.org/2000/svg">
-    <rect width="9" height="6" fill="#fff"/>
-    <rect width="9" height="2.4" fill="#002d62"/>
-    <rect y="3.6" width="9" height="2.4" fill="#ce1126"/>
-    <rect x="3.75" y="2.4" width="1.5" height="1.2" fill="#fff"/>
-    <path d="M4.5 2.7 L4.2 3.3 L4.8 3.3 Z" fill="#002d62"/>
-    <path d="M4.5 3.3 L4.2 2.7 L4.8 2.7 Z" fill="#ce1126"/>
-</svg> 
