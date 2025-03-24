@@ -1,74 +1,83 @@
-using Dominicus.Core.Abstractions.Services;
-using Dominicus.Core.Services;
-using Dominicus.Models.Models;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.IO;
+using Dominicus.Models;
+using Dominicus.Core.Abstractions;
+using Dominicus.Core;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-builder.Services.AddRazorPages();
-
-// Configure data protection with persistent key storage
-var keysDirectory = Path.Combine(builder.Environment.ContentRootPath, "keys");
-Directory.CreateDirectory(keysDirectory);
-
-builder.Services.AddDataProtection()
-    .PersistKeysToFileSystem(new DirectoryInfo(keysDirectory))
-    .SetApplicationName("Dominicus");
-
-// Configure cookie authentication
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
+internal class Program
+{
+    private static void Main(string[] args)
     {
-        options.Cookie.Name = "Dominicus.Auth";
-        options.Cookie.HttpOnly = true;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-        options.Cookie.SameSite = SameSiteMode.Strict;
-        options.ExpireTimeSpan = TimeSpan.FromHours(24);
-        options.SlidingExpiration = true;
-        options.LoginPath = "/Login";
-        options.LogoutPath = "/Logout";
-        options.AccessDeniedPath = "/AccessDenied";
-    });
+        var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddMemoryCache();
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-    options.Cookie.SameSite = SameSiteMode.Strict;
-});
+        // Configure data protection first (needed for auth and session)
+        var keysDirectory = Path.Combine(builder.Environment.ContentRootPath, "keys");
+        Directory.CreateDirectory(keysDirectory);
 
-// Configure services
-builder.Services.Configure<ClaudeConfig>(
-    builder.Configuration.GetSection("ClaudeConfig"));
+        builder.Services.AddDataProtection()
+            .PersistKeysToFileSystem(new DirectoryInfo(keysDirectory))
+            .SetApplicationName("Dominicus");
 
-builder.Services.AddScoped<ITranslationService, ClaudeTranslationService>();
+        // Add core services
+        builder.Services.AddRazorPages();
+        builder.Services.AddMemoryCache();
 
-var app = builder.Build();
+        // Configure authentication
+        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
+            {
+                options.Cookie.Name = "Dominicus.Auth";
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.Strict;
+                options.ExpireTimeSpan = TimeSpan.FromHours(24);
+                options.SlidingExpiration = true;
+                options.LoginPath = "/Login";
+                options.LogoutPath = "/Logout";
+                options.AccessDeniedPath = "/AccessDenied";
+            });
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+        // Configure session after authentication
+        builder.Services.AddSession(options =>
+        {
+            options.IdleTimeout = TimeSpan.FromMinutes(30);
+            options.Cookie.HttpOnly = true;
+            options.Cookie.IsEssential = true;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            options.Cookie.SameSite = SameSiteMode.Strict;
+            options.Cookie.Name = "Dominicus.Session"; // Add explicit name
+        });
+
+        // Configure application services
+        builder.Services.Configure<ClaudeConfig>(
+            builder.Configuration.GetSection("ClaudeConfig"));
+
+        builder.Services.AddDistributedMemoryCache(); // Required for session state
+        builder.Services.AddScoped<ITranslationService, ClaudeTranslationService>();
+
+        var app = builder.Build();
+
+        // Configure the HTTP request pipeline.
+        if (!app.Environment.IsDevelopment())
+        {
+            app.UseExceptionHandler("/Error");
+            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            app.UseHsts();
+        }
+
+        // Add middleware in the correct order
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
+        app.UseRouting();
+
+        // Authentication and authorization must come before session
+        app.UseAuthentication();
+        app.UseAuthorization();
+        app.UseSession();
+
+        app.MapRazorPages();
+
+        app.Run();
+    }
 }
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();
-
-// Add authentication and authorization middleware in the correct order
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.UseSession(); // Add session middleware after auth middleware
-
-app.MapRazorPages();
-
-app.Run();

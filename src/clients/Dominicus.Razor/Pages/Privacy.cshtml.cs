@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Dominicus.Pages;
+namespace Dominicus.Razor.Pages;
 
 public class PrivacyModel : PageModel
 {

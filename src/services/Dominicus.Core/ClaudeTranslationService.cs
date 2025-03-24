@@ -3,10 +3,10 @@ using Anthropic.SDK;
 using Anthropic.SDK.Messaging;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Dominicus.Core.Abstractions.Services;
-using Dominicus.Models.Models;
+using Dominicus.Models;
+using Dominicus.Core.Abstractions;
 
-namespace Dominicus.Core.Services;
+namespace Dominicus.Core;
 
 public class ClaudeTranslationService : ITranslationService
 {

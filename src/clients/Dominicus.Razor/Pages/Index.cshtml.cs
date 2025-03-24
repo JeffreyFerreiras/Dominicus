@@ -1,9 +1,9 @@
-using Dominicus.Core.Abstractions.Services;
-using Dominicus.Models.Models;
+using Dominicus.Core.Abstractions;
+using Dominicus.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Dominicus.Pages;
+namespace Dominicus.Razor.Pages;
 
 public class IndexModel : PageModel
 {
@@ -38,6 +38,11 @@ public class IndexModel : PageModel
         if (history != null)
         {
             ConversationHistory = history;
+            _logger.LogInformation($"Loaded {ConversationHistory.Count} conversation items from session");
+        }
+        else
+        {
+            _logger.LogWarning("No conversation history found in session");
         }
     }
 
@@ -62,6 +67,7 @@ public class IndexModel : PageModel
 
             ConversationHistory = HttpContext.Session.Get<List<Conversation>>("ConversationHistory") ?? new List<Conversation>();
             ConversationHistory.Add(conversation);
+            _logger.LogInformation($"Added new conversation. Total count: {ConversationHistory.Count}");
 
             // Keep only the most recent conversations
             if (ConversationHistory.Count > MaxHistoryItems)
@@ -70,6 +76,7 @@ public class IndexModel : PageModel
             }
 
             HttpContext.Session.Set("ConversationHistory", ConversationHistory);
+            _logger.LogInformation("Saved conversation history to session");
             Question = string.Empty;
         }
         catch (Exception ex)

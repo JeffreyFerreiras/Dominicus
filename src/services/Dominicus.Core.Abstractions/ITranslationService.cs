@@ -1,4 +1,4 @@
-namespace Dominicus.Core.Abstractions.Services;
+namespace Dominicus.Core.Abstractions;
 
 public interface ITranslationService
 {

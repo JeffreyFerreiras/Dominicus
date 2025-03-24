@@ -1,4 +1,4 @@
-namespace Dominicus.Models.Models;
+namespace Dominicus.Models;
 
 public class ClaudeConfig
 {

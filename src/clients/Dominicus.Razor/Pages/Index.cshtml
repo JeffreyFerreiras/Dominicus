@@ -1,4 +1,5 @@
 ﻿@page
+@using Dominicus.Razor.Pages
 @using Dominicus.Razor.Pages.Shared.Components
 @model IndexModel
 @{
@@ -21,7 +22,8 @@
                 <ChatMessage IsUser="true"
                             Question="@conversation.Question" />
 
-                <ChatMessage EnglishResponse="@conversation.EnglishResponse"
+                <ChatMessage IsUser="false"
+                            EnglishResponse="@conversation.EnglishResponse"
                             DominicanResponse="@conversation.DominicanResponse" />
             }
         }

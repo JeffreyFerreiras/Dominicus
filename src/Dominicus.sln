@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35825.156 d17.13
+VisualStudioVersion = 17.13.35825.156
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dominicus", "clients\Dominicus.Razor\Dominicus.csproj", "{F1AA0DE3-EDB0-C606-A066-181B0517775C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dominicus.Razor", "clients\Dominicus.Razor\Dominicus.Razor.csproj", "{F1AA0DE3-EDB0-C606-A066-181B0517775C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dominicus.Models", "models\Dominicus.Models\Dominicus.Models.csproj", "{1409C861-06A0-81FE-3E10-F23E4689AB69}"
 EndProject
