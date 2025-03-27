@@ -87,7 +87,7 @@ public class IndexModelTests
         // Arrange
         _translationService
             .GetTranslatedResponseAsync(Arg.Any<string>())
-            .Returns((null, null));
+            .Returns(("", ""));
         
         var indexModel = new IndexModel(_translationService, _logger)
         {

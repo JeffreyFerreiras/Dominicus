@@ -40,6 +40,7 @@ public class ClaudeTranslationService : ITranslationService
    - Informal Dominican pronunciation (e.g., dropping 's' at end of words, using 'l' instead of 'r')
    - Add humor and warmth typical of Dominican culture
    - Use 'manin', 'primo', or 'tigueraje' for friendly addressing
+   - Make the format nice and easy to read
 Make it sound like a real Dominican person speaking casually with a friend.
 
 Format your response exactly like this:
